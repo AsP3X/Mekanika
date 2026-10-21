@@ -1,15 +1,53 @@
-# Charge Pad and Energy Tablet GUI
+# Charge Pad GUI for Mekanika
 
-## Charge Pad
-- Displays charging rate and connected item energy.
-- Supports gear, tablets, and other energy items.
-- Side configuration for energy input.
+This document defines the Charge Pad and related portable charging interfaces. All content is original and conceptual.
 
-## Energy Tablet
-- Item tooltip and GUI (if opened) show fill level.
-- Chargeable from Charge Pad or machines.
-- Stackable with shared or per-item energy depending on design.
+## Goals
+
+- Provide a simple way to charge energy tablets, gear, and gadgets.
+- Display charge progress clearly.
+- Integrate with the shared energy system.
+- Support side configuration for energy input.
+
+## Layout
+
+- Central charge slot for the item being charged.
+- Energy bar showing the pad’s buffer or transfer rate.
+- Progress indicator for the item being charged.
+- Rate display (energy per tick).
+- Side configuration button.
+- Redstone control.
+- Player inventory at the bottom.
+
+## Behavior
+
+- Accepts energy from cables or other sources on configured faces.
+- Transfers energy into the item in the charge slot.
+- Stops when the item is full or energy is unavailable.
+- Supports energy tablets, gear pieces, and compatible gadgets.
+- Optional multi-slot variant for later tiers.
 
 ## Integration
-- Shared energy system.
-- Clear feedback when fully charged or unable to charge.
+
+- Uses the shared energy container.
+- Side configuration controls input faces.
+- Config cards can copy settings.
+- Debug tool reports buffer and transfer rate.
+- Syncs charge progress efficiently.
+
+## Edge Cases
+
+- Item removed mid-charge.
+- Insufficient energy input.
+- Incompatible item in slot.
+- Creative infinite energy.
+- Rapid item swapping.
+
+## Implementation Notes
+
+- Reuse energy bar and slot widgets.
+- Validate item energy capability before charging.
+- Provide clear full/empty/charging states.
+- Document charge rate values in config.
+
+The Charge Pad provides convenient early- and mid-game charging for portable items.
