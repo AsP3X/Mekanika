@@ -1,44 +1,49 @@
-# AGENTS.md — Mekanika
+# AGENTS.md — Binding Rules for Mekanika
 
-Binding rules for all coding and design agents working on this project.
+These rules are mandatory for all agents (Grok coding, Claude design/textures/support).
+
+Adapted from AsP3X/AIRuleBook (agent-non-negotiables, scope-discipline, git-commits, root-cause-debugging, definition-of-done, codebase-conventions, dependency-safety, no-deprecated-apis, inline-documentation) and Mekanika project decisions.
 
 ## Core Non-Negotiables
 
-1. **No commits, pushes, or PRs without explicit user permission.**
-2. **License awareness**: Do not assume open-source freedom. Follow the owner's chosen license. Mark third-party code clearly.
-3. **Definition of Done**: Feature works + tested (or clear test plan), code is clean, documentation updated, assets integrated or path documented, status summary provided.
-4. **Touch only what is required**: No drive-by refactors or unsolicited changes.
-5. **Never fabricate**: Do not invent paths, APIs, or results. State uncertainty.
-6. **Plans are binding**: Treat agreed phases as checklists.
+- Treat every rule in this file as a **binding requirement**. When rules conflict, follow the **most restrictive** reading and note the conflict.
+- **Scope discipline**: Change only what the current task requires. No drive-by refactors, renames, formatting, or unrequested features. Report out-of-scope findings under "Noticed, not changed".
+- **Git**: Commit, push, merge, or open PRs **only** on explicit user request. Use exact prefixes: `TASK:`, `FIX:`, `BUGFIX:`, `DOCS:`, `CHORE:`. No AI attribution (no `Co-Authored-By` or "Generated with" footers). Stage only relevant files. One logical change per commit. Never `git add .` unless explicitly asked. Never bypass hooks with `--no-verify` unless asked.
+- **Root-cause debugging**: Reproduce and explain the root cause before changing code. No symptom patches (silent catches, increased timeouts, disabling checks). One hypothesis at a time. Guard fixes with tests.
+- **Definition of Done**: Evidence required before claiming complete (builds clean, tests pass where applicable, lint no new suppressions, docs updated, no secrets, assets integrated or path documented). State the evidence.
+- **No secrets** in code, commits, logs, or output.
+- **Dependencies**: Ask before adding or major-upgrading. Prefer existing or standard library. Verify the exact package. Pin versions. Check licenses. Report changes.
+- **No deprecated APIs**. Replace or reimplement. Do not suppress deprecation warnings to leave old calls.
+- **Inline documentation**: Non-trivial code gets clear comments explaining *why*. Prefer paired `// Human:` + `// Agent:` style where useful for complex logic.
+- **Codebase conventions**: Follow existing patterns. Reuse before writing. Keep directory structure. Ask before new top-level folders or dependencies.
+- **Never fabricate** file paths, APIs, registry names, or results. State uncertainty.
+- **Plans are binding**: Treat agreed phases and plans as checklists. Do not silently skip major steps.
 
-## Grok (Coding) Rules
+## Project-Specific Rules (Mekanika)
 
-- Prefer clear, readable modern Java suitable for Minecraft 26.2 / JDK 25.
-- Keep logic in the Architectury common module; platform modules stay thin.
-- PowerAPI must be consistent across loaders (full custom on Fabric, bridge/shared elsewhere).
-- Use data-driven recipes and configs wherever practical.
-- Validate network packets and player interactions. Do not trust client data for machine logic.
-- Write or describe tests for critical systems (energy, multiblocks, chemicals).
-- Non-trivial logic requires clear comments explaining *why*.
+- **Textures (Claude only)**: All block textures created exclusively by Claude. Exactly **16×16 pixels**. Original designs matching industrial style (tier colors: Basic=green, Advanced=red, Elite=cyan, Ultimate=purple) but **not** exact copies of Mekanism blocks. Deliver PNGs + handoff checklist.
+- **Architecture**: Architectury multi-loader. Common module holds nearly all logic. Platform modules are thin (entrypoints, energy adapters).
+- **PowerAPI**: Consistent energy unit (Joules, long-based) and transfer model across loaders. Full custom on Fabric; bridges or shared on NeoForge/Forge. Document the model early.
+- **Data-driven**: Prefer configurable values and data-driven recipes for rates, capacities, processing speeds.
+- **Multiblocks & Networks**: Robust validation. Efficient tick and network logic. Clear failure modes and player feedback for radiation, fission, and fusion defined early.
+- **Branding**: Unique. No trademarked names or exact assets from other mods.
+- **License**: Respect the repository owner's chosen license. Do not invent or silently add license files.
+- **Debug support**: Lightweight debug command or config flag for energy networks and multiblock formation added early.
 
-## Claude (Design & Support) Rules
+## Texture Handoff Checklist (Claude → Grok)
 
-- **All block textures must be exactly 16×16 pixels.**
-- Style must match Mekanism’s industrial aesthetic (tier colors: Basic green, Advanced red, Elite cyan, Ultimate purple) but **must not copy exact designs**.
-- Deliver individual PNGs with clear naming.
-- Provide design documents, recipe trees, multiblock blueprints, and balance notes.
-- Maintain visual consistency across all blocks and items.
+1. Filename matching registry ID.
+2. Exactly 16×16 PNG.
+3. Expected block/item ID.
+4. Any animation frames or special states.
+5. GUI or particle references if applicable.
+6. Style notes (tier color, material).
+7. Suggested path (e.g. `assets/mekanika/textures/block/`).
 
 ## Shared Workflow
 
 - State a short plan before large changes.
 - Prefer small, verifiable steps.
-- When blocked, stop and report clearly.
+- When blocked, stop and report clearly instead of guessing.
 - All visual assets come from Claude; Grok integrates them.
-
-## Project-Specific Additions
-
-- Texture Handoff checklist required for every asset delivery.
-- Early debug command/config for energy networks and multiblock formation.
-- Short design note documenting PowerAPI energy unit and transfer model.
-- Clear failure modes and player feedback defined early for radiation, fission, and fusion.
+- Out-of-scope findings are reported, not fixed in the current change.
