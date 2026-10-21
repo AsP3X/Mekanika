@@ -25,6 +25,13 @@ Recommended reading order for implementers:
 - [QIO_SYSTEM.md](QIO_SYSTEM.md) — Frequency-based storage
 - [GEAR_MODULE_SYSTEM.md](GEAR_MODULE_SYSTEM.md) — MekaSuit modules
 - [RADIATION_SYSTEM.md](RADIATION_SYSTEM.md) — Exposure and protection
+- [INDUCTION_MATRIX.md](INDUCTION_MATRIX.md) — Large-scale energy storage design
+
+## GUI Documentation
+- [GUI_DOCUMENTATION.md](GUI_DOCUMENTATION.md) — Overall GUI patterns and conventions
+- [ENERGY_CORE_GUI.md](ENERGY_CORE_GUI.md) — Energy Cube / energy storage GUI
+- [ENERGY_CELL_GUI.md](ENERGY_CELL_GUI.md) — Energy Cell GUI
+- [INDUCTION_MATRIX_GUI.md](INDUCTION_MATRIX_GUI.md) — Induction Matrix GUI
 
 ## Process and Support
 - [FRAMEWORK_IMPLEMENTATION_ORDER.md](FRAMEWORK_IMPLEMENTATION_ORDER.md) — Coding sequence (canonical)
@@ -36,12 +43,13 @@ Recommended reading order for implementers:
 - [POWER_BUDGET.md](POWER_BUDGET.md) — Progression energy targets
 - [PUBLIC_API_SUMMARY.md](PUBLIC_API_SUMMARY.md) — Stable interfaces
 - [SYNC_STRATEGY.md](SYNC_STRATEGY.md) — Client/server sync rules
-- [GUI_PATTERNS.md](GUI_PATTERNS.md) — Shared GUI conventions
+- [GUI_PATTERNS.md](GUI_PATTERNS.md) — Shared GUI conventions (see GUI_DOCUMENTATION.md)
 - [PERFORMANCE_GUIDELINES.md](PERFORMANCE_GUIDELINES.md) — Tick and network performance rules
 - [NBT_CONVENTIONS.md](NBT_CONVENTIONS.md) — Data component and NBT standards
 - [RECIPE_DATA_GENERATION.md](RECIPE_DATA_GENERATION.md) — Recipes and data generation (canonical)
 - [RECIPE_DATA_GEN.md](RECIPE_DATA_GEN.md) — Earlier recipe notes (see RECIPE_DATA_GENERATION.md)
 - [TEXTURE_HANDOFF.md](TEXTURE_HANDOFF.md) / [TEXTURE_HANDOFF_EXPANDED.md](TEXTURE_HANDOFF_EXPANDED.md) — Texture requirements
+- [FRAMEWORK_DIAGRAM.md](FRAMEWORK_DIAGRAM.md) — Architecture diagram
 - [CLEAN_ROOM_ANALYSIS.md](CLEAN_ROOM_ANALYSIS.md) — Architectural learnings
 - [ADDITIONAL_SYSTEMS.md](ADDITIONAL_SYSTEMS.md) — Miscellaneous notes
 - [PLAN.md](PLAN.md) — Overall project plan
