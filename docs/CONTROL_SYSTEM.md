@@ -1,130 +1,98 @@
-# Control System API Design for Mekanika
+# Control System API — Clean-Room Design
 
-This document provides detailed, clean-room design guidance for machine control systems, including redstone control, security, the Configurator tool, and config cards. All content is original and conceptual.
+This document defines the conceptual design for Mekanika’s control systems, including redstone control, security modes, computer/peripheral integration, and the Configurator tool. All content is original.
 
-## Goals
+## Overview
 
-- Provide consistent control options across machines, transmitters, and storage.
-- Support redstone-based automation.
-- Enable ownership and access control for multiplayer.
-- Make configuration fast and copyable.
-- Integrate cleanly with side configuration and networks.
-- Remain lightweight and data-driven where possible.
+Machines and structures support multiple control layers:
+- Redstone control (activation modes).
+- Security modes (access control).
+- Computer methods (for CC: Tweaked or similar).
+- Configurator tool for side configuration and other modes.
+- Logic adapters for advanced multiblock control.
 
 ## Redstone Control
 
-### Modes
-- Disabled (always on)
-- Low (active when no redstone signal)
-- High (active when redstone signal present)
-- Pulse (active for one tick on signal change)
-
-### Behavior
-- Machines check redstone mode before processing.
-- Transmitters can optionally respect redstone for push/pull.
-- Multiblock controllers can expose redstone control.
+- Modes:
+  - Disabled / Ignored: Machine always runs (if other conditions met).
+  - High / Normal: Runs when redstone signal is present.
+  - Low / Inverted: Runs when no redstone signal is present.
+  - Pulse: Runs for one operation or short duration on rising edge.
+- Stored per machine in a component.
+- GUI tab or button to cycle modes.
 - Comparator output based on fill level, progress, or status.
+- Logic adapters on multiblocks expose specific signals (e.g., high temperature, excess waste, damage critical).
 
-### Implementation
-- Store redstone mode in a component or attachment.
-- Update on neighbor redstone changes.
-- Support both direct redstone and comparator input.
+## Security Modes
 
-## Security and Ownership
+- Modes:
+  - Public: Anyone can access.
+  - Private: Only the owner can access.
+  - Trusted: Owner and players on the trusted list can access.
+- Owner is set on placement.
+- Trusted players are managed via a Security Desk.
+- Operators can bypass security (configurable).
+- Unauthorized players cannot open GUIs, break the machine (contents may be protected), or interact with it.
+- GUI lock icon shows and allows cycling modes (owner only).
 
-### Modes
-- Public (anyone can access)
-- Private (owner only)
-- Trusted (owner + trusted players)
+## Computer / Peripheral Integration
 
-### Features
-- Ownership set on placement (player who placed the block).
-- Trusted list managed via Security Desk or in-GUI.
-- Applies to machines, tanks, bins, QIO, and multiblocks.
-- Security can be copied via config cards.
-
-### Implementation
-- Store owner UUID and trusted list.
-- Check security before opening GUI or allowing automation.
-- Optional security override for operators or creative.
+- Machines and multiblocks expose methods for computers (e.g., CC: Tweaked).
+- Common methods:
+  - getEnergy(), getProgress(), getStatus().
+  - activate() / deactivate() / scram().
+  - getTemperature(), getDamagePercent(), getCoolant() (for reactors).
+  - setRate(), getBurnRate().
+- Methods are annotated or registered for automatic exposure.
+- Support for both direct and modem connections.
+- Error handling for invalid calls or security restrictions.
 
 ## Configurator Tool
 
-### Modes
-- Configure (cycle side modes)
-- Wrench (rotate, dismantle)
-- Empty (or other utility modes)
+- Multi-mode tool:
+  - Configurate: Cycle side configuration modes.
+  - Wrench: Rotate machines.
+  - Optional: Network reader, security, etc.
+- Right-click reports current mode; Shift + right-click cycles.
+- Works on machines, transmitters, and multiblock ports.
+- Active transmission type can be selected.
 
-### Behavior
-- Shift + right-click cycles the mode for the hovered transmission type.
-- Right-click reports current mode or opens side config GUI.
-- Works on machines and transmitters.
-- Visual feedback (colored overlays or particles) when held.
-- Can switch active transmission type (energy, item, fluid, chemical, heat).
+## Logic Adapters
 
-### Integration
-- Triggers network rebuild requests when connection modes change.
-- Compatible with config cards for bulk operations.
-
-## Config Cards
-
-### Features
-- Copy side configuration, redstone mode, security settings, and upgrades.
-- Paste onto compatible machines.
-- Optional factory-aware pasting.
-- Feedback on success or mismatch.
-
-### Implementation
-- Store copied data as a serializable data component or NBT.
-- Validate compatibility before applying.
-- Support batch paste on multiple machines.
-
-## Side Configuration Integration
-
-- Side configuration is the primary control for resource flow.
-- Redstone and security are orthogonal but complementary.
-- Configurator is the main tool for interacting with side config.
-- All control settings should be serializable for config cards and NBT.
-
-## Multiblock Considerations
-
-- Controllers expose redstone and security settings.
-- Ports can have independent side configuration.
-- Security is checked at the controller level.
-- Formation success can be signaled via redstone or particles.
-
-## Debug and Player Feedback
-
-- Debug tool reports current redstone mode, security owner, and side config summary.
-- GUI shows redstone and security status.
-- Clear messages when access is denied due to security.
-- Configurator provides immediate visual feedback.
+- Special blocks for multiblocks (reactors, turbines, etc.).
+- Configurable to emit or receive redstone based on conditions:
+  - Activation / scram.
+  - High temperature.
+  - Excess waste.
+  - Damage critical.
+  - Insufficient fuel.
+- Integrate with computer methods for advanced automation.
 
 ## Implementation Recommendations
 
-1. Implement redstone control early (simple and high value).
-2. Add security after basic machines are working.
-3. Build the Configurator as a multi-mode tool from the start.
-4. Support config cards once side config is stable.
-5. Integrate all control systems with the shared machine base.
-6. Make modes data-driven where practical.
-7. Add debug visibility for all control states.
+1. Implement redstone control as a reusable component early.
+2. Add security modes with owner tracking and trusted list support.
+3. Expose a clean set of computer methods for key machines and structures.
+4. Make the Configurator a multi-mode tool from the start.
+5. Support logic adapters for nuclear and large structures.
+6. Document all computer methods clearly for players and addon authors.
+7. Rate-limit computer method calls if needed to prevent lag.
+8. Ensure security checks are applied to computer methods and GUI access.
 
 ## Edge Cases
 
-- Rapid redstone pulsing.
-- Security changes while a player has the GUI open.
-- Config cards applied to incompatible machines.
-- Multiblock ports with conflicting redstone settings.
-- Chunk unload with active redstone control.
-- Trusted list management in multiplayer.
-- Configurator used on unformed multiblocks.
+- Pulse mode with rapid redstone signals.
+- Security changes while a player has a GUI open.
+- Computer methods called on unformed multiblocks.
+- Trusted list updates not immediately reflected.
+- Operator bypass configuration.
+- Logic adapter signals during structure formation/invalidation.
 
-## Balance and UX
+## Player Feedback
 
-- Redstone control should feel responsive.
-- Security should not interfere with single-player or private worlds by default.
-- Configurator should be craftable early and useful throughout the game.
-- Config cards are a mid-to-late quality-of-life feature.
+- Clear GUI indicators for redstone control and security modes.
+- Messages when access is denied.
+- Debug tool shows control state and last computer method calls (optional).
+- Status lights or comparator output for key conditions.
 
-This design provides a cohesive control system that supports both automation and multiplayer use while remaining consistent across all machine types.
+This control system provides flexible automation and access control while remaining consistent across machines and structures.
