@@ -2,12 +2,24 @@
 
 ## Network Reader / Debug Command
 
-On use, report:
-- Multiblock: formed status, size, component counts, last failure.
-- Energy network: capacity, throughput, buffer, node count.
-- Chemical/fluid network: type, amount, flow.
-- Side config summary.
-- Redstone and security status.
-- Radiation level if applicable.
+### Multiblock
+- Formed status, size (L×W×H), component counts, last failure reason and position.
 
-Gate behind config or creative.
+### Energy Network
+- Capacity, current buffer, throughput (current/max), node count, acceptor/emitter counts.
+
+### Chemical / Fluid Network
+- Type, amount, flow rate, filter status.
+
+### Item Network
+- Color channel, filter summary, path status.
+
+### Control
+- Side config summary, redstone mode, security owner.
+
+### Radiation
+- Current exposure level if applicable.
+
+## Access
+- Gated behind config flag or creative mode.
+- Available as both item and command.

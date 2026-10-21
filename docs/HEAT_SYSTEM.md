@@ -2,14 +2,20 @@
 
 ## Goals
 - Temperature-driven heat transfer distinct from energy.
-- Used by boilers, turbines, and reactors.
+- Used by boilers, turbines, reactors, and cooling systems.
 
 ## Core Concepts
-- Heat as a transferable resource via Thermodynamic Conductors.
-- Temperature thresholds for machines.
-- Heat capacity and transfer rate.
-- Integration with fission and fusion cooling loops.
+- Heat capacitors store heat capacity.
+- Thermodynamic Conductors transfer heat with rate limits.
+- Temperature thresholds trigger machine behavior or failure.
+- Dissipation and cooling loops.
+
+## Integration
+- Fission and fusion reactors generate heat.
+- Boilers convert heat to steam.
+- Turbines consume steam for energy.
+- Clear overheating failure modes with player feedback.
 
 ## Notes
-- Heat is not stored long-term like energy; focus on transfer and dissipation.
-- Clear failure modes for overheating.
+- Heat is primarily a transfer and threshold system rather than long-term storage.
+- Debug tool reports temperature and heat flow.

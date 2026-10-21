@@ -1,18 +1,23 @@
 # Radiation System
 
 ## Goals
-- Clear sources, exposure, and protection.
+- Clear sources, exposure calculation, and protection.
 - Player feedback and failure modes.
 - Integration with gear and nuclear systems.
 
 ## Core Concepts
-- Radiation sources (fission waste, certain chemicals, reactors).
-- Exposure calculation based on proximity and time.
-- Decay over time.
-- Protection via MekaSuit modules or items.
-- Player effects (damage, status) at high exposure.
+- Radiation sources (fission waste, certain chemicals, active reactors).
+- Exposure calculation based on proximity, time, and shielding.
+- Decay over time when not exposed.
+- Protection via MekaSuit modules or dedicated items.
+- Player effects (damage, status effects) at high exposure.
 
 ## Feedback
-- Geiger counter or dosimeter tool.
-- Visual and audio warnings.
+- Geiger counter or dosimeter tool for measurement.
+- Visual and audio warnings at threshold levels.
 - GUI indicators on nuclear multiblocks.
+- Debug tool reports current exposure.
+
+## Notes
+- Radiation should feel dangerous but manageable with proper gear.
+- Clear failure mode when exposure exceeds safe limits.
