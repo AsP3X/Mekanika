@@ -1,12 +1,35 @@
 # Public API Surface Summary
 
-Stable interfaces for addons and modules:
+Stable interfaces intended for addons and internal modules:
 
-- Energy: IEnergyContainer, IEnergyHandler
-- Chemical: IChemicalTank, IChemicalHandler, ChemicalStack
-- Fluid: IFluidTank, IFluidHandler
-- Side Configuration: relative side modes
-- Multiblock: formation and data access (read-only where possible)
-- Gear: module registration and capability hooks
+## Energy
+- IEnergyContainer
+- IEnergyHandler
+- Energy formatting helpers
 
-Document all public methods and expected contracts.
+## Chemicals
+- ChemicalStack
+- IChemicalTank
+- IChemicalHandler
+
+## Fluids
+- IFluidTank
+- IFluidHandler
+
+## Side Configuration
+- Relative side mode API
+- Configurator interaction hooks
+
+## Multiblock
+- MultiblockData read access
+- Formation status queries
+
+## Gear
+- Module registration
+- Capability hooks
+
+## Notes
+- Document contracts and expected behavior for each interface.
+- Prefer interfaces over concrete classes.
+- Version public API carefully.
+- Internal implementation details should remain private.

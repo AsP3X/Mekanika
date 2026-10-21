@@ -1,14 +1,26 @@
-# Progression and Power Budget Sheet
+# Progression and Power Budget
 
 ## Early Game
-- Heat/solar generators sufficient for basic machines.
-- Target: 1-5 kJ/t per machine.
+- Heat, Solar, and basic generators.
+- Target: 1–5 kJ/t per basic machine.
+- Sufficient for single machines and small setups.
 
 ## Mid Game
-- Gas-burning and advanced generators for factories.
-- Target: 10-50 kJ/t for factory lines.
+- Gas-burning and advanced generators.
+- Factories begin to appear.
+- Target: 10–50 kJ/t for factory lines and chemical production.
 
 ## Late Game
-- Turbine/fission/fusion for large-scale processing.
+- Turbines, Fission, and Fusion reactors.
 - Induction Matrix for buffering.
-- Document expected ratios so balance remains tunable.
+- Target: 100+ kJ/t for large-scale processing and reactors.
+
+## Chemical and Fluid Budgets
+- Document expected consumption for each processing stage.
+- Ensure early chemical production can support 3×–4× chains.
+- Late-game multiblocks require dedicated chemical infrastructure.
+
+## Notes
+- All values are data-driven.
+- Claude provides balance notes; Grok implements the data keys.
+- Review budgets when new machines or upgrades are added.

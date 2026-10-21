@@ -1,77 +1,46 @@
-# Factories for Mekanika
-
-This document provides detailed, clean-room design guidance for factory machines. All content is original and conceptual.
+# Factory System
 
 ## Goals
+- Parallel processing of the same recipe across multiple independent slots.
+- Shared energy, chemical, and fluid inputs for efficiency.
+- Auto-sort for player convenience.
+- Clear GUI feedback for multi-slot progress.
 
-- Parallel processing with shared recipe logic and efficient resource use.
-- Auto-sort to reduce manual inventory management.
-- Clear interaction with upgrades, energy, and chemicals.
-- Consistent behavior with base machines.
-- Data-driven slot counts and rates.
+## Slot Model
+- Slot count scales with tier: 3 (Basic), 5 (Advanced), 7 (Elite), 9 (Ultimate).
+- Each slot has its own progress and can process independently.
+- Shared recipe selection — all slots process the same recipe.
+- Energy and chemical consumption is summed across active slots.
 
-## Core Concepts
+## Auto-Sort
+- Toggleable feature that moves matching inputs into empty slots.
+- Runs periodically or on inventory change.
+- Respects filters and side configuration.
 
-### Process Slots
-- Tiered slot count (e.g., Basic 3, Advanced 5, Elite 7, Ultimate 9).
-- Each slot tracks its own input, output, progress, and current recipe.
-- Shared recipe lookup across slots for performance.
-- Slots can process independently or share resources.
-
-### Resource Sharing
-- Energy consumption is summed across all active slots each tick.
-- Chemical and fluid consumption is shared or per-slot (document the chosen model; shared is simpler).
-- Auto-sort moves matching items from a shared input into empty slots when inventory changes.
-- Output slots can be shared or individual.
-
-### Upgrades
-- Applied to the factory as a whole.
-- Speed upgrades increase processing rate and resource consumption.
-- Energy upgrades reduce energy use.
-- Chemical upgrades improve efficiency or throughput.
-- Effects scale with the number of active slots.
+## Upgrades
+- Speed, energy, and gas upgrades apply to the whole factory.
+- Effects are calculated once and applied to all slots.
+- Upgrade slots are shared.
 
 ## GUI
-
-- Multiple process slots with individual progress bars.
+- Grid or row layout showing all process slots.
 - Shared energy and chemical gauges.
 - Auto-sort toggle.
-- Upgrade slots.
-- Side configuration and control buttons.
-- Clear indication of which slots are active or blocked.
+- Progress visualization per slot or aggregated.
 
-## Integration Points
-
-- Side configuration and control systems (redstone, security).
-- Networks for item and chemical movement.
-- Recipe system for shared lookup.
-- JEI/EMI for factory recipes.
-- Config cards for copying settings.
-- Debug tool for slot status and consumption.
-
-## Implementation Recommendations
-
-1. Implement after the base machine, recipe system, and upgrades are stable.
-2. Add auto-sort early for quality of life.
-3. Decide and document shared vs. per-slot resource model.
-4. Integrate upgrades so they scale correctly with slot count.
-5. Make slot counts and multipliers data-driven.
-6. Provide clear GUI feedback for blocked slots.
+## Integration
+- Reuses base machine recipe handlers and side configuration.
+- Factories can be used in place of single machines in processing chains.
+- Debug tool reports active slot count and efficiency.
 
 ## Edge Cases
+- Partial inputs across slots.
+- Recipe changes while slots are processing.
+- Full output inventory blocking progress.
+- Mixed upgrade effects.
 
-- Mixed inputs across slots.
-- Auto-sort conflicts or loops.
-- Upgrade changes while running.
-- Full output slots blocking progress.
-- Chemical or energy shortage affecting only some slots.
-- Config card paste on a factory with different slot count.
-
-## Player Feedback
-
-- Progress bars per slot.
-- Status messages for why a slot is not processing.
-- Clear auto-sort behavior.
-- Tooltip for upgrade effects.
-
-This design provides efficient parallel processing while remaining consistent with base machine behavior and easy to balance.
+## Implementation Notes
+- Track progress per slot independently.
+- Batch energy and chemical consumption.
+- Rate-limit auto-sort checks.
+- Support config cards for factory settings.
