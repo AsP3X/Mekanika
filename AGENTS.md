@@ -22,13 +22,20 @@ Adapted from AsP3X/AIRuleBook (agent-non-negotiables, scope-discipline, git-comm
 ## Project-Specific Rules (Mekanika)
 
 - **Textures (Claude only)**: All block textures created exclusively by Claude. Exactly **16×16 pixels**. Original designs matching industrial style (tier colors: Basic=green, Advanced=red, Elite=cyan, Ultimate=purple) but **not** exact copies of Mekanism blocks. Deliver PNGs + handoff checklist.
-- **Architecture**: Architectury multi-loader. Common module holds nearly all logic. Platform modules are thin (entrypoints, energy adapters).
+- **Architecture**: Architectury multi-loader. Common module holds nearly all logic. Platform modules are thin (entrypoints, energy adapters). Generators, Storage, and Tools depend only on Core + PowerAPI (no circular dependencies).
 - **PowerAPI**: Consistent energy unit (Joules, long-based) and transfer model across loaders. Full custom on Fabric; bridges or shared on NeoForge/Forge. Document the model early.
-- **Data-driven**: Prefer configurable values and data-driven recipes for rates, capacities, processing speeds.
-- **Multiblocks & Networks**: Robust validation. Efficient tick and network logic. Clear failure modes and player feedback for radiation, fission, and fusion defined early.
+- **Data-driven**: Prefer configurable values and data-driven recipes (JSON / data generators) for rates, capacities, processing speeds. Claude’s balance notes feed into data files rather than hard-coded values.
+- **Multiblocks & Networks**: Robust validation. Efficient tick and network logic. Clear failure modes and player feedback for radiation, fission, and fusion defined early. Use appropriate logging levels; surface meaningful failures to the player (not just console).
 - **Branding**: Unique. No trademarked names or exact assets from other mods.
 - **License**: Respect the repository owner's chosen license. Do not invent or silently add license files.
 - **Debug support**: Lightweight debug command or config flag for energy networks and multiblock formation added early.
+
+## Minecraft Implementation Notes
+
+- **Java style**: Clear, readable modern Java (JDK 25 appropriate for MC 26.2). Naming: `camelCase` methods/fields, `PascalCase` classes, `UPPER_SNAKE_CASE` constants.
+- **BlockEntities & logic**: Separate sided logic carefully. Prefer capabilities or lookup systems for energy, chemicals, and inventories. Keep tick methods efficient.
+- **Common pitfalls**: Avoid heavy work on the client thread; handle NBT sync properly; validate multiblock structures before running logic; watch for performance in large networks.
+- **Testing bar (minimum)**: Energy networks transfer correctly under load; multiblock formation and disassembly work and reject invalid structures; chemical processing and ore multiplication produce expected outputs; basic regression tests for changes to core systems.
 
 ## Texture Handoff Checklist (Claude → Grok)
 
