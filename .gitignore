@@ -1,0 +1,19 @@
+# Minecraft / Gradle
+build/
+run/
+.gradle/
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Mod specific
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
