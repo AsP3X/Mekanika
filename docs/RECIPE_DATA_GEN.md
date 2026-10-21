@@ -1,18 +1,9 @@
-# Recipe and Data Generation System
+# Recipe and Data Generation (Redirect)
 
-## Goals
-- All recipes, tags, tier multipliers, and ratios are data-driven.
-- Claude’s balance notes map directly to data files or configs.
-- Easy to add or adjust recipes without code changes.
+**This document is superseded.**
 
-## Structure
-- Recipe types for each machine (enrichment, crushing, chemical infusion, etc.).
-- Tiered recipes or recipe multipliers where appropriate.
-- Tags for ore processing compatibility.
-- Data generators for recipes, tags, and loot tables.
+The current recipe and data generation guidance lives in [RECIPE_DATA_GENERATION.md](RECIPE_DATA_GENERATION.md).
 
-## Implementation Notes
-- Use Minecraft’s data gen system.
-- Keep recipe builders in the public API where possible.
-- Document the expected data format for each recipe type.
-- Support both JSON and data gen for flexibility.
+Please use that file as the canonical reference.
+
+This file is retained only for historical reference.
