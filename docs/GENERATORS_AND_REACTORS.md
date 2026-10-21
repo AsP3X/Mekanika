@@ -1,36 +1,9 @@
-# Generators and Reactors
+# Generators and Reactors (Redirect)
 
-## Goals
-- Provide progressive power generation from early to late game.
-- Support simple generators and complex multiblock reactors.
-- Integrate with energy networks, heat, chemicals, and radiation.
+**This document is superseded.**
 
-## Simple Generators
-- Heat Generator, Solar Generator, Wind Generator, Gas-Burning Generator.
-- Tiered output and fuel efficiency.
-- Side configuration for energy output.
-- Data-driven rates.
+The current generators and reactors design lives in [GENERATORS_REACTORS.md](GENERATORS_REACTORS.md).
 
-## Industrial Turbine
-- Multiblock with rotor, blades, coils, condensers.
-- Steam input → energy output.
-- Efficiency based on size and component quality.
-- Formation rules and failure modes (imbalance, overspeed).
+Please use that file as the canonical reference.
 
-## Fission Reactor
-- Fuel assemblies, control rods, coolant ports.
-- Heat generation and radiation byproduct.
-- Cooling loop requirements.
-- Meltdown failure mode with clear player feedback.
-
-## Fusion Reactor
-- Laser-initiated or injection-based.
-- High energy output with coolant and fuel requirements.
-- Stability mechanics.
-- Integration with heat and energy networks.
-
-## Shared Patterns
-- All generators use the energy system.
-- Multiblock reactors use the formation and invalidation framework.
-- Debug tool reports output, efficiency, and failure reasons.
-- Clear progression from simple generators to reactors.
+This file is retained only for historical reference.
