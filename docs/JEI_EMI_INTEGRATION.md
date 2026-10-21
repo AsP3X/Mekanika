@@ -1,90 +1,85 @@
-# JEI / EMI Integration for Mekanika
+# JEI / EMI Integration — Clean-Room Design
 
-This document provides detailed, clean-room design guidance for JEI and EMI integration. All content is original and conceptual.
+This document defines the conceptual design and implementation guidance for JEI and EMI integration in Mekanika. All content is original.
 
 ## Goals
 
-- Clear, informative recipe display for all machines, factories, and multiblocks.
-- Support for item, fluid, chemical, and energy inputs/outputs.
-- Ghost ingredient dragging into machine slots.
-- Multiblock structure previews and material cost information.
-- Consistent visual language with in-game GUIs.
-- Data-driven recipe registration so balance changes do not require code updates.
-- Support for both JEI and EMI where practical.
+- Provide clear, consistent recipe displays for all machines, factories, and multiblock structures.
+- Show energy, chemical, and fluid requirements with visual gauges.
+- Support ghost ingredient dragging into machine slots.
+- Offer multiblock previews and material cost summaries.
+- Support both JEI and EMI where practical.
+- Keep registration data-driven so balance changes do not require code edits.
 
 ## Recipe Categories
 
-- One primary recipe category per machine type (Enrichment Chamber, Chemical Injection Chamber, etc.).
-- Factory recipes can share the same category or have a dedicated factory view.
-- Multiblock structures may have info pages rather than traditional recipes (formation rules, material counts, outputs).
-- Categories display processing time, energy cost, and chemical/fluid requirements.
+- One category per major machine type (Enrichment Chamber, Crusher, Chemical Infuser, etc.).
+- Factories share the base machine category or use a shared factory category with slot count noted.
+- Multiblock structures get info pages rather than traditional recipes where appropriate.
+- Chemical and fluid recipes display input/output gauges with amounts and rates.
+- Energy cost is shown as a rate (J/t) or total cost depending on the machine.
 
-## Display Elements
+## Display Patterns
 
-- Item slots for inputs and outputs.
-- Fluid and chemical gauges with type and amount.
-- Energy cost indicator.
-- Processing time or speed.
-- Secondary outputs with chance indicators where applicable.
-- Tier or upgrade notes if they affect the recipe.
+### Machine Recipes
+- Input slots on the left, output slots on the right.
+- Progress arrow or bar in the center.
+- Energy gauge or rate label.
+- Chemical and fluid gauges near relevant slots.
+- Tooltip with exact amounts, rates, and upgrade effects if applicable.
 
-## Ghost Ingredients
+### Multiblock Info Pages
+- Structure name and description.
+- Required blocks and minimum size.
+- Formation rules summary.
+- Material cost list.
+- Optional 3D or schematic preview (provided by Claude).
+- Links to related machines or chemicals.
 
-- Support dragging ingredients from JEI/EMI into machine and factory slots.
-- Respect slot validation and filters.
-- Provide feedback if an ingredient cannot be placed.
-- Work for both single machines and factories.
+### Chemical / Fluid Recipes
+- Use consistent gauge widgets.
+- Show both amount and rate where relevant.
+- Support attribute-based recipes (e.g., any chemical with a certain property).
 
-## Multiblock Previews
+## Ghost Ingredient Support
 
-- Info pages or categories that show:
-  - Required frame and internal blocks.
-  - Minimum and maximum size where applicable.
-  - Material counts.
-  - Special rules (controller placement, ports, valves).
-  - Expected outputs or rates.
-- Avoid hard-coding layouts; derive counts from validator rules or data where possible.
-- Include tier and upgrade information where relevant.
-
-## Data-Driven Registration
-
-- Recipes are registered from data packs or data generators.
-- Chemical and fluid types, amounts, and energy costs come from the same data used by machines.
-- Support for data pack overrides.
-- Document the recipe format so design notes map cleanly.
+- Transfer handlers allow dragging ingredients from JEI/EMI into machine and factory slots.
+- Support for chemical and fluid ghost ingredients where the API allows.
+- Clear visual feedback when a ghost ingredient cannot be placed.
+- Compatible with the side configuration and slot validation rules.
 
 ## Implementation Recommendations
 
-1. Define recipe categories and display widgets early.
-2. Integrate with the recipe and data generation system.
-3. Add ghost ingredient support once machine GUIs are stable.
-4. Create multiblock info pages after structure validators are defined.
-5. Support both JEI and EMI if feasible, or prioritize one with a clear path for the other.
-6. Rate-limit or cache recipe lookups for performance.
-7. Provide clear tooltips for chemical and fluid amounts.
+1. Register recipes through a data-driven system so Claude can adjust balance without code changes.
+2. Create reusable recipe display widgets for energy, chemicals, and fluids.
+3. Implement transfer handlers for item, chemical, and fluid slots.
+4. Provide multiblock info pages with material lists and formation summaries.
+5. Support both JEI and EMI; prefer shared abstractions where possible.
+6. Document recipe builder helpers if addons need to register custom recipes.
+7. Rate-limit or cache heavy recipe lookups.
+8. Test ghost ingredient dragging with factories and multiblock controllers.
 
 ## Edge Cases
 
-- Dynamic recipes based on upgrades or tier.
-- Multiblock recipes with variable outputs or sizes.
+- Dynamic recipes that change with upgrades or tier.
+- Multiblock recipes with variable outputs based on structure size.
 - Chemical attribute-based recipes.
-- Factories with multiple slots processing the same recipe.
-- Missing chemical or fluid types in data.
-- Large numbers of recipes and performance.
+- Recipes that consume or produce radiation or heat.
+- Factories with multiple slots sharing the same recipe.
+- Missing JEI/EMI at runtime (graceful degradation).
+- Large recipe counts affecting search performance.
 
 ## Player Feedback
 
-- Clear display of all inputs, outputs, and costs.
-- Tooltips with exact amounts and types.
-- Multiblock pages that help players plan structures.
-- Consistent with in-game GUI visual language.
+- Clear tooltips for all inputs, outputs, and rates.
+- Visual distinction between item, fluid, and chemical ingredients.
+- Formation requirements shown before the player attempts to build.
+- Error messages if a ghost ingredient cannot be placed.
 
-## Integration Points
+## Notes
 
-- Recipe and data generation system.
-- Machine and factory GUIs for ghost ingredients.
-- Multiblock validators for structure requirements.
-- Balance workflow for rates and ratios.
-- Debug tool can reference recipe data.
+- Claude provides structure blueprints and material lists for multiblock previews.
+- Grok implements the registration, display, and transfer handlers.
+- Keep the public API surface for recipe builders small and stable.
 
-This design ensures players can understand and plan their setups using JEI or EMI while keeping the integration maintainable and data-driven.
+Strong JEI/EMI integration improves discoverability and reduces the need for external guides.
