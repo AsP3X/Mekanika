@@ -1,85 +1,94 @@
-# JEI / EMI Integration — Clean-Room Design
+# JEI and EMI
 
-This document defines the conceptual design and implementation guidance for JEI and EMI integration in Mekanika. All content is original.
+Recipe lookup for the twelve machine types, plus one info page per multiblock. JEI and EMI are optional. Mekanika runs when neither is installed. Both plugins register the same categories. A data pack that replaces a recipe changes the page. It does not change the joules in config.
 
-## Goals
+The layout uses the machine presets in [GUI_LAYOUTS.md](GUI_LAYOUTS.md). The counts come from the recipe JSON in [RECIPE_DATA_GENERATION.md](RECIPE_DATA_GENERATION.md).
 
-- Provide clear, consistent recipe displays for all machines, factories, and multiblock structures.
-- Show energy, chemical, and fluid requirements with visual gauges.
-- Support ghost ingredient dragging into machine slots.
-- Offer multiblock previews and material cost summaries.
-- Support both JEI and EMI where practical.
-- Keep registration data-driven so balance changes do not require code edits.
+## Normative constants
 
-## Recipe Categories
+```normative
+jei.machine_categories=12
+jei.structure_pages=8
+jei.catalysts_per_category=5
+jei.required_mods=0
+jei.ghost.saves=0
+```
 
-- One category per major machine type (Enrichment Chamber, Crusher, Chemical Infuser, etc.).
-- Factories share the base machine category or use a shared factory category with slot count noted.
-- Multiblock structures get info pages rather than traditional recipes where appropriate.
-- Chemical and fluid recipes display input/output gauges with amounts and rates.
-- Energy cost is shown as a rate (J/t) or total cost depending on the machine.
+`12 + 8 = 20` pages. `12 * 5 = 60` catalyst registrations. Vanilla `mekanika:crafting_shaped` stays in the crafting grid. It is not one of the twelve.
 
-## Display Patterns
+## Categories
 
-### Machine Recipes
-- Input slots on the left, output slots on the right.
-- Progress arrow or bar in the center.
-- Energy gauge or rate label.
-- Chemical and fluid gauges near relevant slots.
-- Tooltip with exact amounts, rates, and upgrade effects if applicable.
+The category id is the recipe type id.
 
-### Multiblock Info Pages
-- Structure name and description.
-- Required blocks and minimum size.
-- Formation rules summary.
-- Material cost list.
-- Optional 3D or schematic preview (provided by Claude).
-- Links to related machines or chemicals.
+| Category | Catalysts |
+| --- | --- |
+| `mekanika:enriching` | Enrichment chamber, then its four factories |
+| `mekanika:crushing` | Crusher and its four factories |
+| `mekanika:smelting_machine` | Energized smelter and its four factories |
+| `mekanika:purifying` | Purification chamber and its four factories |
+| `mekanika:injecting` | Chemical injection chamber and its four factories |
+| `mekanika:dissolving` | Chemical dissolution chamber and its four factories |
+| `mekanika:washing` | Chemical washer and its four factories |
+| `mekanika:crystallizing` | Chemical crystallizer and its four factories |
+| `mekanika:metallurgic_infusing` | Metallurgic infuser and its four factories |
+| `mekanika:oxidizing` | Chemical oxidizer and its four factories |
+| `mekanika:chemical_infusing` | Chemical infuser and its four factories |
+| `mekanika:separating` | Electrolytic separator and its four factories |
 
-### Chemical / Fluid Recipes
-- Use consistent gauge widgets.
-- Show both amount and rate where relevant.
-- Support attribute-based recipes (e.g., any chemical with a certain property).
+The page is the machine preset from the layout doc, without the player inventory. Item slots, gauges, and the progress widget sit at those coordinates. The energy line reads the config joules per tick. A batch machine also shows `joules_per_tick * 200`. A flow machine shows the per-tick rate and does not show a batch total.
 
-## Ghost Ingredient Support
+Enriching velorite ore shows 1 ore, 2 dust, and 1,000 J/t. The batch line is 200,000 J. Infusing an alloy shows 10 mB of `mekanika:redstone`. The washer page shows 1,000 J/t and no batch total.
 
-- Transfer handlers allow dragging ingredients from JEI/EMI into machine and factory slots.
-- Support for chemical and fluid ghost ingredients where the API allows.
-- Clear visual feedback when a ghost ingredient cannot be placed.
-- Compatible with the side configuration and slot validation rules.
+The tooltip adds one static line: eight speed upgrades take the batch to 22 ticks at 9,000 J/t. It does not recompute other upgrade counts.
 
-## Implementation Recommendations
+## Transfer
 
-1. Register recipes through a data-driven system so Claude can adjust balance without code changes.
-2. Create reusable recipe display widgets for energy, chemicals, and fluids.
-3. Implement transfer handlers for item, chemical, and fluid slots.
-4. Provide multiblock info pages with material lists and formation summaries.
-5. Support both JEI and EMI; prefer shared abstractions where possible.
-6. Document recipe builder helpers if addons need to register custom recipes.
-7. Rate-limit or cache heavy recipe lookups.
-8. Test ghost ingredient dragging with factories and multiblock controllers.
+Clicking a recipe while a machine or factory screen of that category is open transfers items from the player inventory into input slots.
 
-## Edge Cases
+- The amount moved is the minimum of the recipe count, the player's count, and the free space in the slot.
+- A factory uses the lowest index slot that can take the item.
+- A tag ingredient uses the first matching item the player is holding. If the player has none, the ghost shows the first item currently in that tag.
+- A missing item places a ghost in the slot. A ghost is not processed, is not saved, and clears when the screen closes.
+- Chemical and fluid amounts are drawn on the gauge. They move 0 mB.
+- The filter upgrade still rejects a different item id. That transfer moves 0 and does not place a ghost.
+- A screen of another category moves 0.
 
-- Dynamic recipes that change with upgrades or tier.
-- Multiblock recipes with variable outputs based on structure size.
-- Chemical attribute-based recipes.
-- Recipes that consume or produce radiation or heat.
-- Factories with multiple slots sharing the same recipe.
-- Missing JEI/EMI at runtime (graceful degradation).
-- Large recipe counts affecting search performance.
+The player holds 5 velorite ore and the enrichment input is empty. The transfer moves 1 and leaves 4. The player holds 0. The transfer moves 0 and the slot shows a ghost.
 
-## Player Feedback
+## Structure pages
 
-- Clear tooltips for all inputs, outputs, and rates.
-- Visual distinction between item, fluid, and chemical ingredients.
-- Formation requirements shown before the player attempts to build.
-- Error messages if a ghost ingredient cannot be placed.
+These ids are info pages. They have no inputs and no transfer.
 
-## Notes
+| Page | Minimum |
+| --- | --- |
+| `mekanika:structure/dynamic_tank` | Exterior 3. Shell `27 - 1 = 26` blocks |
+| `mekanika:structure/evaporation` | Footprint 4×4, height 3 |
+| `mekanika:structure/boiler` | Exterior 3 |
+| `mekanika:structure/sps` | Exterior 3, 5, or 7 |
+| `mekanika:structure/induction_matrix` | Exterior 3, interior filled |
+| `mekanika:structure/turbine` | Exterior 5, odd width |
+| `mekanika:structure/fission` | Exterior 3 |
+| `mekanika:structure/fusion` | Exterior 5. Frame `125 - 27 = 98` blocks |
 
-- Claude provides structure blueprints and material lists for multiblock previews.
-- Grok implements the registration, display, and transfer handlers.
-- Keep the public API surface for recipe builders small and stable.
+Each page names the controller id and the minimum exterior. The tank page states the interior block is air and the minimum shell is 1 controller plus 25 casings. The fusion page states the frame is 1 controller, 1 fuel port, 4 lasers, and 92 casings, plus the core. There is no 3D preview.
 
-Strong JEI/EMI integration improves discoverability and reduces the need for external guides.
+## Worked-example index
+
+```normative-examples
+example.categories=12
+example.structures=8
+example.pages=20
+example.catalysts=5
+example.catalyst_registrations=60
+example.required_mods=0
+example.energy.per_tick=1000
+example.energy.batch=200000
+example.washer.batch_line=0
+example.transfer.moved=1
+example.transfer.left=4
+example.ghost.moved=0
+example.chemical.moved=0
+example.tank.shell=26
+example.fusion.frame=98
+example.fusion.casings=92
+```

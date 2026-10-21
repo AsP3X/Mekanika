@@ -13,6 +13,7 @@ Recommended reading order for implementers:
 - [ITEM_TRANSPORT.md](ITEM_TRANSPORT.md) — Logistical transporters, sorting, filtering
 - [HEAT_SYSTEM.md](HEAT_SYSTEM.md) — Heat transfer and thermodynamic conductors
 - [TRANSMITTER_CONFIG.md](TRANSMITTER_CONFIG.md) — Transmitter color, filter, and connection modes
+- [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md) — Cable, tube, and pipe buffers, fluid tanks, and the per-tick split
 
 ## Machine Frameworks
 - [SIDE_CONFIGURATION.md](SIDE_CONFIGURATION.md) — Per-face modes and Configurator
@@ -25,8 +26,8 @@ Recommended reading order for implementers:
 - [FACTORIES.md](FACTORIES.md) — Parallel processing slots, auto-sort, shared tanks
 - [MULTIBLOCK_FORMATION.md](MULTIBLOCK_FORMATION.md) — Formation protocol
 - [MULTIBLOCK_INVALIDATION.md](MULTIBLOCK_INVALIDATION.md) — Invalidation and reformation
-- [MULTIBLOCK_STRUCTURES.md](MULTIBLOCK_STRUCTURES.md) — Dynamic Tank, Evaporation, Boiler, SPS, Induction Matrix
-- [MULTIBLOCK_SPECS.md](MULTIBLOCK_SPECS.md) — Additional structure notes
+- [MULTIBLOCK_STRUCTURES.md](MULTIBLOCK_STRUCTURES.md) — Canonical rules for Dynamic Tank, Evaporation, Boiler, SPS, Induction Matrix, Turbine, Fission, and Fusion
+- [MULTIBLOCK_SPECS.md](MULTIBLOCK_SPECS.md) — Validation sheet, tick order, and worked examples for those structures
 
 ## Content Systems
 - [MATERIAL_PROGRESSION.md](MATERIAL_PROGRESSION.md) — Ores, alloys, and tier progression
@@ -41,9 +42,11 @@ Recommended reading order for implementers:
 - [WORLD_GENERATION.md](WORLD_GENERATION.md) — Ore generation rules
 
 ## GUI Documentation
+- [GUI_LAYOUTS.md](GUI_LAYOUTS.md) — Screen sizes, slot positions, and required widgets
 - [GUI_DOCUMENTATION.md](GUI_DOCUMENTATION.md) — Overall GUI patterns and conventions
 - [GUI_PATTERNS.md](GUI_PATTERNS.md) — Shared GUI conventions
 - [MACHINE_GUI.md](MACHINE_GUI.md) — Standard processing machine GUI
+- [MACHINE_IO.md](MACHINE_IO.md) — Slot counts and default sides
 - [FACTORY_GUI.md](FACTORY_GUI.md) — Factory parallel slot GUI
 - [TANK_GUI.md](TANK_GUI.md) — Fluid and chemical tank GUI
 - [ENERGY_CORE_GUI.md](ENERGY_CORE_GUI.md) — Energy Cube / energy storage GUI
@@ -74,11 +77,13 @@ Recommended reading order for implementers:
 - [PERFORMANCE_GUIDELINES.md](PERFORMANCE_GUIDELINES.md) — Tick and network performance rules
 - [NBT_CONVENTIONS.md](NBT_CONVENTIONS.md) — Data component and NBT standards
 - [RECIPE_DATA_GENERATION.md](RECIPE_DATA_GENERATION.md) — Recipes and data generation (canonical)
+- [CRAFTING_RECIPES.md](CRAFTING_RECIPES.md) — Shaped grids, casings, and the ethylene reaction
 - [RECIPE_DATA_GEN.md](RECIPE_DATA_GEN.md) — Earlier recipe notes
 - [JEI_EMI_INTEGRATION.md](JEI_EMI_INTEGRATION.md) — JEI and EMI integration
-- [SOUNDS_AND_PARTICLES.md](SOUNDS_AND_PARTICLES.md) — Audiovisual feedback
-- [LOCALIZATION.md](LOCALIZATION.md) — Language key conventions
-- [TEXTURE_HANDOFF.md](TEXTURE_HANDOFF.md) / [TEXTURE_HANDOFF_EXPANDED.md](TEXTURE_HANDOFF_EXPANDED.md) — Texture requirements
+- [SOUNDS_AND_PARTICLES.md](SOUNDS_AND_PARTICLES.md) — Sound and particle event ids
+- [LOCALIZATION.md](LOCALIZATION.md) — Language keys and the English inventory
+- [TEXTURE_HANDOFF.md](TEXTURE_HANDOFF.md) / [TEXTURE_HANDOFF_EXPANDED.md](TEXTURE_HANDOFF_EXPANDED.md) — Texture paths and the asset list
+- [OVERSIZED_BLOCKS.md](OVERSIZED_BLOCKS.md) — Blocks that draw or claim space outside one cube
 - [CLEAN_ROOM_ANALYSIS.md](CLEAN_ROOM_ANALYSIS.md) — Architectural learnings
 - [ADDITIONAL_SYSTEMS.md](ADDITIONAL_SYSTEMS.md) — Miscellaneous notes
 - [PLAN.md](PLAN.md) — Overall project plan

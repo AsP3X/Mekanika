@@ -149,8 +149,8 @@ This document expands on the clean-room analysis with practical, detailed design
 
 ### Recommended Approach
 - Energy containers expose capacity and current amount (long, Joules).
-- Transmitters have throughput limits and optional buffers.
-- Networks track total capacity, current buffer, and throughput.
+- Transmitters store the buffer in [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md). A cable buffer equals its throughput.
+- The network count is for debug. The network does not keep a second copy of the buffer.
 - Machines can push energy or allow pull based on side config.
 - Large storage (Induction Matrix style) separates storage cells (capacity) from providers (transfer rate).
 - Events for energy transfer enable debugging and integration.

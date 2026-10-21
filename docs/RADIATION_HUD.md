@@ -50,7 +50,7 @@ This document defines the player-facing radiation display. All content is origin
 
 - Keep the HUD lightweight.
 - Use clear color and sound cues.
-- Document threshold values.
-- Test with and without protection.
+- Thresholds and colors are the scale table in [RADIATION_SYSTEM.md](RADIATION_SYSTEM.md): Safe below 0.00001 Sv/h, Low below 0.001, Moderate below 0.1, High below 10, and Critical at 10 and above.
+- Test with and without the lined suit.
 
 The radiation HUD makes nuclear content readable and manageable.

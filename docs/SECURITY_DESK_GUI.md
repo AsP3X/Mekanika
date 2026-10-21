@@ -1,5 +1,7 @@
 # Security Desk GUI for Mekanika
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 This document defines the Security Desk and trusted list management interface. All content is original and conceptual.
 
 ## Goals
@@ -15,9 +17,8 @@ This document defines the Security Desk and trusted list management interface. A
 - Trusted player list with names.
 - Input field to add a player by name.
 - Remove button per entry.
-- Apply / Save button.
-- Feedback area for success or errors.
-- Optional list of nearby secured blocks.
+- Add and remove apply on that tick. There is no Apply button.
+- An unknown name shows "Unknown player." and leaves the list unchanged.
 
 ## In-Machine Compact Panel
 
@@ -44,7 +45,7 @@ This document defines the Security Desk and trusted list management interface. A
 - Uses the security component from the Control System.
 - Applies to machines, tanks, QIO, and multiblock controllers.
 - Debug tool reports owner and mode.
-- Creative mode bypass is configurable.
+- Creative mode bypass is `general.creative_bypass`, default false. Operator bypass is `general.operator_bypass`, default false. Both are in [CONTROL_SYSTEM.md](CONTROL_SYSTEM.md).
 
 ## Edge Cases
 

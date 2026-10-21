@@ -1,5 +1,7 @@
 # Induction Matrix
 
+Dimensions, block ids, tier defaults, and the transfer budget are specified in [MULTIBLOCK_STRUCTURES.md](MULTIBLOCK_STRUCTURES.md).
+
 ## Goals
 - Large-scale energy storage with high throughput.
 - Separation of capacity (cells) and transfer rate (providers).

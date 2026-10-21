@@ -1,5 +1,7 @@
 # Industrial Turbine GUI for Mekanika
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 This document defines the GUI for the Industrial Turbine. All content is original and conceptual.
 
 ## Goals

@@ -71,3 +71,5 @@ Most multiblocks use CuboidStructureValidator or a thin subclass. Complex ones (
 - Support structure merging and revalidation without full rebuilds when possible.
 
 This pattern allows a single framework to support Dynamic Tanks, Induction Matrices, Turbines, Reactors, and future structures with minimal duplication.
+
+Per-structure dimensions, blocks, and tick rules are in [MULTIBLOCK_STRUCTURES.md](MULTIBLOCK_STRUCTURES.md). The assertion values are in [MULTIBLOCK_SPECS.md](MULTIBLOCK_SPECS.md).

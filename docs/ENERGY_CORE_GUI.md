@@ -1,5 +1,7 @@
 # Energy Core / Energy Cube GUI Design for Mekanika
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 This document provides detailed, clean-room design guidance for the GUI of the Energy Core (Energy Cube) and related energy storage interfaces. All content is original and conceptual.
 
 ## Goals
@@ -17,7 +19,7 @@ This document provides detailed, clean-room design guidance for the GUI of the E
 - Large central energy gauge showing current amount and capacity.
 - Input rate and output rate displays.
 - Side configuration button or integrated face overview.
-- Upgrade slots (if applicable for portable or advanced cubes).
+- Energy cubes have no upgrade slots and no item slots.
 - Redstone control and security indicators.
 - Player inventory at the bottom.
 

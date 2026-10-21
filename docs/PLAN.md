@@ -33,19 +33,21 @@ Deliver the complete Mekanism experience for Minecraft 26.2 on Forge, Fabric, an
 
 ## Development Phases
 
-1. **Foundation** — Project setup, PowerAPI skeleton, basic energy cube/cable
-2. **Core materials & basic machines** — Ores, alloys, Infuser, Enrichment, Crusher, Smelter, factory skeleton
-3. **Chemicals & full processing** — Chemical system + 5× ore chain
-4. **Transmitters** — All transmitter types and networks
-5. **Multiblock framework** — Structure system + Dynamic Tank, Evap, Boiler, SPS
-6. **Generators** — Simple generators + Turbine, Fission, Fusion
-7. **Storage** — Induction Matrix + full QIO
-8. **Tools/Gear** — MekaSuit, Meka-Tool, modules, gadgets
-9. **Polish** — JEI/EMI, configs, final balance, testing across loaders
+Each phase is done when the matching steps in [FRAMEWORK_IMPLEMENTATION_ORDER.md](FRAMEWORK_IMPLEMENTATION_ORDER.md) pass.
+
+1. **Foundation** — Steps 1 through 4. A basic energy cube and a basic cable exist. One enrichment chamber draws 1,000 J/t.
+2. **Core materials and basic machines** — Step 9's enrichment, crusher, smelter, and infuser, plus velorite and the three alloys. A 2× ore path yields 2 ingots and costs 600,000 J.
+3. **Chemicals and full processing** — The rest of step 9. A 5× ore path yields 5 ingots and costs 12,440,000 J.
+4. **Transmitters** — Step 6. Item, fluid, chemical, energy, and heat networks move on the documented costs.
+5. **Multiblock framework** — Step 5, then the tank, evaporation plant, boiler, and SPS from step 11.
+6. **Generators** — Step 10, then the turbine, fission reactor, and fusion reactor from step 11.
+7. **Storage** — Step 12. Matrix cells and a 12-slot QIO array.
+8. **Tools and gear** — Step 13.
+9. **Polish** — Step 14, on Forge, Fabric, and NeoForge.
 
 ## Roles
 
 - **Grok**: All Java code, Gradle, networking, BlockEntities, registries, platform adapters
-- **Claude**: All 16×16 textures, design docs, recipe trees, multiblock blueprints, balance sheets, GUI layouts, supporting documentation
+- **Claude**: All 16×16 textures, the GUI frame and widget atlas, design docs, recipe trees, multiblock blueprints, balance sheets, supporting documentation
 
 See `AGENTS.md` for binding rules.

@@ -1,5 +1,7 @@
 # Side Configuration Screen
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 ## Goals
 - Dedicated full-screen or panel for configuring all faces and transmission types.
 - Clear color language and mode cycling.

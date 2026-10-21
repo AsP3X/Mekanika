@@ -1,5 +1,7 @@
 # Induction Matrix GUI
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 This document defines the GUI for the Induction Matrix, the large-scale energy storage multiblock.
 
 ## Goals

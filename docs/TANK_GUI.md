@@ -1,5 +1,7 @@
 # Tank GUI (Chemical and Fluid)
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 ## Goals
 - Clear display of stored chemical or fluid type and amount.
 - Support for filtering, dump modes, and side configuration.
@@ -20,7 +22,7 @@
 ## Interaction
 - Right-click opens GUI.
 - Configurator for side modes.
-- Bucket interaction if enabled.
+- The fill and drain slots move buckets. Use on a block does not place or scoop a fluid.
 
 ## Integration
 - Uses shared tank and side config systems.

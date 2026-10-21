@@ -1,57 +1,65 @@
-# World Generation for Mekanika
+# World Generation
 
-This document defines ore and resource generation. All content is original and conceptual.
+Overworld placement for velorite and sulfur. Recipe use of those items is in [ORE_PROCESSING_CHAIN.md](ORE_PROCESSING_CHAIN.md) and [MATERIAL_PROGRESSION.md](MATERIAL_PROGRESSION.md).
 
-## Goals
+Existing chunks do not change. New chunks use the current config. A data pack can replace the placed feature. The config keys disable a feature. They do not rewrite a feature that a pack already replaced.
 
-- Provide a clear early-game resource path.
-- Keep generation data-driven and configurable.
-- Support Silk Touch and Fortune.
-- Remain compatible with other mods via tags.
-- Avoid aggressive world changes by default.
+## Normative constants
 
-## Core Ore
+```normative
+worldgen.velorite.enabled=true
+worldgen.velorite.vein_size=8
+worldgen.velorite.veins_per_chunk=6
+worldgen.velorite.min_y=-32
+worldgen.velorite.max_y=48
+worldgen.velorite.distribution=uniform
 
-- Primary ore (osmium-style role): generates in the overworld.
-- Configurable vein size, veins per chunk, and Y-range.
-- Default values documented and overridable in config.
-- Drops raw ore; Silk Touch yields the block; Fortune increases drops.
-- Tagged under a common tag (e.g., `c:ores/osmium_style`) for compatibility.
+worldgen.sulfur.enabled=true
+worldgen.sulfur.vein_size=6
+worldgen.sulfur.veins_per_chunk=4
+worldgen.sulfur.min_y=0
+worldgen.sulfur.max_y=96
+worldgen.sulfur.distribution=uniform
 
-## Supporting Resources
+worldgen.salt.enabled=false
+worldgen.salt.vein_size=6
+worldgen.salt.veins_per_chunk=3
+worldgen.salt.min_y=40
+worldgen.salt.max_y=80
 
-- Optional salt or secondary resources if needed for chemical chains.
-- Generation can be disabled per resource.
-- No forced biome restrictions by default; optional biome filters via config.
+worldgen.fortune.extra_per_level=1
+worldgen.fortune.max_drops=4
+```
 
-## Configuration Keys (Examples)
+Uniform means each Y in the closed range is equally likely. Veins do not generate in a chunk when the key is false. Salt is off until a recipe needs it. Sulfur is on because sulfuric acid starts from sulfur dust.
 
-- `worldgen.ore.enabled` (boolean, default true)
-- `worldgen.ore.veinSize` (int, default 8)
-- `worldgen.ore.veinsPerChunk` (int, default 6)
-- `worldgen.ore.minY` / `maxY` (ints)
-- `worldgen.ore.fortuneMultiplier` (float)
+## Drops
 
-## Implementation Notes
+| Block | Silk Touch | Otherwise |
+| --- | --- | --- |
+| `mekanika:velorite_ore` | The ore block | 1 raw velorite, plus 1 per Fortune level, capped at 4 |
+| `mekanika:deepslate_velorite_ore` | The deepslate ore | Same raw count |
+| `mekanika:sulfur_ore` | The ore block | 2 to 4 sulfur dust, plus 1 per Fortune level, capped at 6 |
 
-- Use configured features or data-driven generation.
-- Register features early in the mod lifecycle.
-- Test chunk generation performance with default and high values.
-- Provide a sample config section with comments.
-- Document regeneration behavior on existing worlds (usually new chunks only).
+The 2×–5× machine counts are for the ore block item. Raw velorite uses the raw table in the ore doc. Furnace smelting of one raw velorite or one ore block yields one ingot.
 
-## Edge Cases
+No biome filter is applied. A config list `worldgen.<ore>.biomes` may name biome ids. An empty list means every overworld biome. The Nether and the End do not place these ores.
 
-- Disabled generation.
-- Extreme vein sizes.
-- Conflicts with other mods’ ore generation.
-- Creative or flat worlds.
-- Dimension-specific overrides.
+## Tags
 
-## Player Feedback
+| Tag | Members |
+| --- | --- |
+| `c:ores/velorite` | Both velorite ore blocks |
+| `c:ores/osmium_style` | Both velorite ore blocks |
+| `c:raw_materials/velorite` | Raw velorite |
+| `c:ingots/velorite` | Velorite ingot |
+| `c:dusts/sulfur` | Sulfur dust |
 
-- Clear ore texture and name.
-- JEI shows the ore and its drops.
-- Lang keys for all names.
+## Worked-example index
 
-This system supplies the base materials for Mekanika’s progression without requiring complex world changes.
+```normative-examples
+example.velorite.band=80
+example.velorite.fortune3_drops=4
+example.sulfur.band=96
+example.salt.enabled=false
+```

@@ -1,5 +1,7 @@
 # GUI Documentation for Mekanika
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 This document defines consistent GUI patterns for machines, factories, multiblocks, and supporting interfaces. All designs are original and conceptual.
 
 ## Goals
@@ -17,7 +19,7 @@ This document defines consistent GUI patterns for machines, factories, multibloc
 - **Output slots**: Right side.
 - **Processing area**: Center (progress bar or animation).
 - **Upgrade slots**: Bottom or dedicated panel.
-- **Energy bar**: Left or top, with numerical tooltip.
+- **Energy bar**: Left edge, with a numerical tooltip. The pixel position is in the layout doc.
 - **Chemical/Fluid tanks**: Vertical gauges with type and amount.
 - **Redstone and Security**: Small indicators or buttons.
 

@@ -23,8 +23,8 @@ This document defines the conceptual design for Mekanika’s chemical system. Al
 
 ## Tank Features
 
-- Tiered storage: Basic → Advanced → Elite → Ultimate (capacity and max output roughly double each tier).
-- Creative tier for infinite storage/output (optional).
+- Tiered storage: Basic, Advanced, Elite, Ultimate. Capacities are in [POWER_BUDGET.md](POWER_BUDGET.md). Per-tick rates are 250, 4,000, 32,000, and 64,000 mB, from [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md).
+- No creative chemical tank is registered.
 - Auto-eject flag (pushes to adjacent tubes or machines).
 - Dump modes:
   - None
@@ -36,27 +36,19 @@ This document defines the conceptual design for Mekanika’s chemical system. Al
 
 ## Networks
 
-- Pressurized Tubes form chemical networks.
-- Networks track:
-  - Total capacity (buffer).
-  - Throughput limit.
-  - Current contents (single chemical type preferred for simplicity).
-- Support push (auto-eject from machines) and pull modes.
-- Side config on tubes and machines controls directionality.
-- Networks merge and split cleanly when tubes are placed or broken.
-- Rate limiting and buffering prevent overflow and reduce tick cost.
+Pressurized tubes use the per-block buffer and the fair split in [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md). A tube holds one chemical id. A different id does not connect, and neither buffer is deleted. Throughput is 250, 1,000, 4,000, and 16,000 mB/t. Buffers are 4,000, 16,000, 256,000, and 1,024,000 mB.
 
 ## Production and Consumption Patterns
 
 - Machines declare input and output chemical tanks.
 - Recipe system specifies chemical inputs/outputs with amounts.
 - Common production loops:
-  - Water electrolysis → hydrogen + oxygen.
+  - Water electrolysis → `mekanika:hydrogen` + `mekanika:oxygen`.
   - Brine processing → chlorine / hydrogen chloride.
   - Sulfuric acid production for 5× ore processing.
   - Slurry → clean slurry → crystal intermediates.
 - Chemical consumption is per-tick or per-operation, scaled by speed upgrades.
-- Factories share chemical tanks across parallel slots or provide per-slot tanks (design choice; shared is simpler).
+- A factory has one shared chemical tank set. Each slot pays that tank in index order, from [FACTORIES.md](FACTORIES.md).
 
 ## Integration Points
 

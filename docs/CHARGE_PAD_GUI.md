@@ -1,5 +1,7 @@
 # Charge Pad GUI for Mekanika
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 This document defines the Charge Pad and related portable charging interfaces. All content is original and conceptual.
 
 ## Goals
@@ -25,7 +27,7 @@ This document defines the Charge Pad and related portable charging interfaces. A
 - Transfers energy into the item in the charge slot.
 - Stops when the item is full or energy is unavailable.
 - Supports energy tablets, gear pieces, and compatible gadgets.
-- Optional multi-slot variant for later tiers.
+- The screen has one charge slot.
 
 ## Integration
 

@@ -16,7 +16,7 @@ This document details expected behavior when using config cards. All content is 
 - Security mode (not ownership or trusted list).
 - Upgrade configuration (compatible slots only).
 - Auto-eject and related flags.
-- Factory shared settings.
+- Factory shared settings, including the auto-sort flag. Per-slot progress is not copied.
 - Transmitter color and filter settings where applicable.
 
 ## Edge Cases and Behavior

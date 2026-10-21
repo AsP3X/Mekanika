@@ -1,5 +1,7 @@
 # Reactor GUI (Fission and Fusion)
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 ## Goals
 - Display fuel status, heat, coolant, energy output, and safety status.
 - Clear failure mode warnings.

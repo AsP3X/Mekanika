@@ -17,8 +17,8 @@ This document provides detailed, clean-room design guidance for the energy syste
 ### Energy Unit
 - Primary unit is the Joule (J), stored as a long.
 - Display formatting uses SI prefixes (kJ, MJ, GJ, TJ).
-- Document conversion rules early if compatibility with other systems (e.g., Forge Energy) is required. Prefer simple ratios (1:1 or 1:2.5) and perform conversion only at the boundary.
-- All internal calculations stay in Joules to avoid repeated conversions.
+- Forge and NeoForge convert at the capability boundary. The ratio is 5 Forge Energy for every 2 Joules, the public 2.5 FE per Joule, done with integers. Fabric does not expose Forge Energy.
+- All internal calculations stay in Joules.
 - Prefer integer arithmetic throughout.
 
 ### IEnergyContainer
@@ -64,7 +64,7 @@ This document provides detailed, clean-room design guidance for the energy syste
 
 ### Transmitters
 - Universal cables form energy networks.
-- Each transmitter has a throughput limit (tiered) and optional small internal buffer.
+- Each cable's buffer equals its throughput. The tick rule is in [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md).
 - Networks track:
   - Total connected storage capacity.
   - Current buffer level.
@@ -76,13 +76,11 @@ This document provides detailed, clean-room design guidance for the energy syste
 - Push: machine or storage ejects energy on configured output faces.
 - Pull: network or machine requests energy on input faces.
 - Controlled entirely by side configuration.
-- Networks distribute available energy fairly or by a documented priority rule (e.g., proportional to demand).
+- A cable stores its own buffer, equal to its throughput. The fair split and the link step are in [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md).
 - Rate limiting prevents single-tick spikes that could overflow or desync.
 
 ### Buffering
-- Transmitters or networks may hold a small buffer to smooth transfer and reduce tick cost on long cables.
-- Buffer size should be configurable or derived from transmitter tier.
-- Avoid large buffers that hide underlying capacity problems.
+- A universal cable's buffer is its throughput key: 1,000, 8,000, 32,000, or 128,000 J. The network does not keep a second copy.
 
 ### Network Lifecycle
 - Networks form dynamically on cable placement and dissolve on break.
@@ -106,7 +104,7 @@ This document provides detailed, clean-room design guidance for the energy syste
 - Fabric lacks a built-in energy API equivalent to Forge Energy.
 - Implement a full custom energy system on Fabric (lookup or attachment-based).
 - Provide a public API that other mods can depend on.
-- On Forge/NeoForge, either share the same internal implementation or provide thin bridges to native energy systems.
+- Forge and NeoForge keep the same Joule containers and add a Forge Energy bridge at the ratio below.
 - Keep the public API identical across loaders so common code does not branch on energy logic.
 - Document the Fabric API surface clearly for third-party integration.
 - Consider an optional Fabric energy API dependency for broader compatibility.
@@ -119,6 +117,52 @@ This document provides detailed, clean-room design guidance for the energy syste
 - Large structures save aggregated energy on the controller.
 - Use reduced update tags where possible to minimize packet size.
 - Energy tablets and gear save their energy in item NBT.
+
+## Forge Energy bridge
+
+Forge and NeoForge only. The bridge sits on the block or item that already stores Joules. Callers see Forge Energy. The container still stores Joules.
+
+Defaults: `energy.forge.fe_numerator = 5` and `energy.forge.joule_denominator = 2`. Both are integers, at least 1. The keys live in `mekanika-energy.toml`.
+
+Joules inserted toward Forge Energy:
+
+`units = joules * fe_numerator + j_to_fe_carry`
+
+`fe = units / joule_denominator`
+
+`j_to_fe_carry = units % joule_denominator`
+
+Forge Energy inserted toward Joules:
+
+`units = fe * joule_denominator + fe_to_j_carry`
+
+`joules = units / fe_numerator`
+
+`fe_to_j_carry = units % fe_numerator`
+
+The carries are saved on that block or item: `mekanika:j_to_fe_carry` and `mekanika:fe_to_j_carry`. A zero carry is omitted. A simulate call does not change the carry.
+
+Two Joules become 5 FE with both carries left at 0. One Joule becomes 2 FE and leaves `j_to_fe_carry` at 1. The next Joule then becomes 3 FE and clears that carry. Five separate 1 FE inserts become 2 Joules: the third insert yields 1 Joule, the fifth yields the other, and `fe_to_j_carry` ends at 0. One thousand Joules, a basic enrichment tick, become 2,500 FE.
+
+## Normative constants
+
+```normative
+energy.forge.fe_numerator=5
+energy.forge.joule_denominator=2
+energy.forge.fabric_bridge=0
+```
+
+## Worked-example index
+
+```normative-examples
+example.forge.two_j=5
+example.forge.one_j_fe=2
+example.forge.one_j_carry=1
+example.forge.next_j_fe=3
+example.forge.five_fe=2
+example.forge.thousand_j=2500
+example.forge.fabric_bridge=0
+```
 
 ## Performance Considerations
 
@@ -159,7 +203,7 @@ This document provides detailed, clean-room design guidance for the energy syste
 - Machines with both input and output faces on the same network (loop prevention).
 - Chunk unload while energy is in transit or buffered.
 - Very large Induction Matrix style structures and their aggregation cost.
-- Mixed-tier cables in the same network (throughput limited by weakest link or averaged).
+- Mixed-tier cables use the link rate `min` of the two throughputs. A full basic cable beside an empty ultimate cable moves 992 J.
 - Overflow handling (prefer clamp or reject rather than silent loss unless designed).
 - Energy tablets and gear charging from any configured face.
 - Zero-capacity or zero-rate containers.

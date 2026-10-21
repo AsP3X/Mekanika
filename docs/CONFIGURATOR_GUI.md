@@ -1,5 +1,7 @@
 # Configurator and Side Configuration GUI
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 ## Goals
 - Visual and interactive side configuration.
 - Clear color language for all transmission types.

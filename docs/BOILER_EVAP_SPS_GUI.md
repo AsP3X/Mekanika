@@ -1,5 +1,7 @@
 # Boiler, Thermal Evaporation, and SPS GUIs
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 ## Thermoelectric Boiler
 - Steam production rate and heat input.
 - Coolant and superheating status.

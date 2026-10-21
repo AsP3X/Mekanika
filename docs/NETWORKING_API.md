@@ -11,15 +11,15 @@ Transmitters form dynamic networks that move resources between machines. Support
 - Items (Logistical Transporters)
 - Heat (Thermodynamic Conductors)
 
-Each resource type has its own network class but shares common patterns for formation, merging, buffering, and throughput.
+Each resource type has its own blocks. Energy, chemical, and fluid amounts, block ids, and the per-tick split are in [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md). Items and heat stay in their own documents.
 
 ## Core Concepts
 
-- **Transmitter**: A block that participates in a network. Stores a reference to its network.
-- **Network**: A connected group of transmitters of the same type. Tracks capacity, buffer, throughput, and connected acceptors/emitters.
+- **Transmitter**: A block that stores its own buffer and six face modes. It does not save a network id.
+- **Network**: The transmitters that can reach each other under the connection rule. Debug reports the count. The network does not store a second buffer.
 - **DynamicNetwork**: Base network with transmitters, acceptors, and merge/split logic.
 - **DynamicBufferedNetwork**: Extends DynamicNetwork for resources that buffer (energy, chemicals, fluids, heat).
-- **Orphan handling**: Newly placed transmitters start as orphans and are assigned to networks on the next tick.
+- **Orphan handling**: A new transmitter transfers by reading its six neighbors on the same tick. The debug cache assigns it on a later tick, at most 8 network rebuilds a tick.
 
 ## Network Lifecycle
 
@@ -31,9 +31,8 @@ Each resource type has its own network class but shares common patterns for form
 
 ## Shared Network Features
 
-- Capacity (total buffer).
-- Throughput (transfer rate limit).
-- Current contents (for buffered networks).
+- Each transmitter's own buffer and throughput, from [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md).
+- Current contents on that block.
 - Acceptor and emitter lists (machines connected to the network).
 - Rate limiting to prevent lag.
 - Events for transfer (for debugging and visual feedback).
@@ -41,9 +40,9 @@ Each resource type has its own network class but shares common patterns for form
 
 ## Resource-Specific Behavior
 
-- **Energy**: Long-based Joules. Push preferred. Networks distribute available energy to acceptors.
-- **Chemicals**: Single preferred type per network for simplicity. Supports push and pull. Dump modes on tanks.
-- **Fluids**: Similar to chemicals but uses fluid stacks. Supports multiple fluid types in advanced cases.
+- **Energy**: Long joules. One buffer per cable. The split is in [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md).
+- **Chemicals**: One id per tube. A different id does not connect, and neither buffer is deleted.
+- **Fluids**: One id per pipe. A different id does not connect, and neither buffer is deleted.
 - **Items**: Pathfinding with color channels, filters, and sorting. Supports pull mode and diversion.
 - **Heat**: Transfers heat between blocks. Used by boilers, turbines, and reactors.
 

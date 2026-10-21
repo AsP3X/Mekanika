@@ -1,5 +1,7 @@
 # Machine GUI
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 ## Goals
 - Consistent layout for all processing machines.
 - Clear input, output, progress, energy, and chemical/fluid feedback.
@@ -9,7 +11,7 @@
 - Input slots on the left.
 - Output slots on the right.
 - Progress bar in the center.
-- Energy gauge on the left or top.
+- Energy gauge on the left edge.
 - Chemical/fluid tanks as vertical gauges.
 - Upgrade slots in a dedicated area.
 - Redstone and security indicators.

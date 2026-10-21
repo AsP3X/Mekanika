@@ -1,5 +1,7 @@
 # QIO Dashboard GUI
 
+Pixel positions, screen sizes, and required widgets are in [GUI_LAYOUTS.md](GUI_LAYOUTS.md).
+
 ## Goals
 - Browse and interact with frequency storage.
 - Support filtering, security, and importer/exporter configuration.
@@ -18,10 +20,9 @@
 - Filter configuration for importers/exporters.
 
 ## Interaction
-- Insert and extract items.
-- Configure filters.
-- View drive status.
-- Respect security restrictions.
+- Click takes one item. Shift-click takes up to the item's max stack. Shift-click from the player inventory inserts what the frequency accepts.
+- Search is a case-insensitive name substring. A query that starts with `#` matches a tag.
+- A failed security check closes the screen. The rules are in [QIO_SYSTEM.md](QIO_SYSTEM.md).
 
 ## Integration
 - Frequency-based data.

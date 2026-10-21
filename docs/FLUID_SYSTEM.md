@@ -23,30 +23,16 @@ Fluids are first-class resources stored in tanks and transferred via Mechanical 
 
 ## Tank Features
 
-- Tiered storage: Basic → Advanced → Elite → Ultimate (capacity and max output roughly double each tier).
-- Creative tier for infinite storage/output (optional).
-- Auto-eject flag (pushes from bottom by default, configurable via side config).
-- Bucket mode (optional): allows the tank item to place or scoop fluids when enabled.
-- Input and output item slots for filling/draining tanks from buckets or portable tanks.
-- Side configuration support (input / output / none / pull per face).
+- Tiered storage: Basic, Advanced, Elite, Ultimate. Capacities are 32,000, 64,000, 128,000, and 256,000 mB. Per-tick rates are 1,000, 4,000, 16,000, and 64,000 mB. The block ids and the tick rule are in [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md).
+- No creative fluid tank is registered.
+- Default faces: input on the top and the four sides, output on the bottom.
+- One fill slot and one drain slot. The tank item does not place or scoop a fluid on use.
+- Tanks retain contents on the dropped item.
 - Redstone control and security integration.
-- Tanks retain contents when broken and replaced.
 
 ## Networks (Mechanical Pipes)
 
-- Mechanical Pipes form fluid networks.
-- Networks track:
-  - Total capacity (buffer).
-  - Throughput / pump rate.
-  - Current fluid contents (prefer single type per network for simplicity).
-- Connection modes (via Configurator):
-  - Normal
-  - Push
-  - Pull
-  - None (disconnected)
-- Networks merge and split cleanly.
-- Rate limiting and buffering prevent overflow and reduce tick cost.
-- In-world upgrading of pipes is supported (alloy right-click upgrades connected pipes).
+Mechanical pipes use the per-block buffer and the fair split in [BUFFERED_NETWORKS.md](BUFFERED_NETWORKS.md). A pipe holds one fluid id. A different id does not connect, and neither buffer is deleted. Face modes are `normal`, `push`, `pull`, and `none`. A tier installer changes the pipe tier and keeps the buffer, clamped to the new capacity. Alloy right-click does not upgrade a pipe.
 
 ## Production and Consumption Patterns
 
@@ -78,18 +64,18 @@ Fluids are first-class resources stored in tanks and transferred via Mechanical 
 5. Document the unit (mB) and any conversion rules clearly.
 6. Add auto-eject and connection modes early.
 7. Provide a debug tool that shows fluid network contents and tank levels.
-8. Support in-world pipe upgrading for quality-of-life.
-9. Prefer single-fluid networks for simplicity and performance.
+8. Use the tier installer for pipe upgrades. Keep the buffer and delete only the amount above the new capacity.
+9. One fluid id per pipe. A refused connection deletes nothing.
 
 ## Edge Cases
 
-- Empty vs. partially filled tanks during network merges.
-- Rapid fill/drain that exceeds throughput.
-- Creative tanks interacting with finite networks.
-- Bucket mode vs. placeable tank mode.
-- Chunk unload while fluids are in pipes or tanks.
+- An empty pipe connects to a pipe that already holds a fluid. The link step can move fluid into the empty pipe.
+- Rapid fill/drain that exceeds throughput. The pipe accepts at most its throughput, and at most its free buffer.
+- No creative tank is registered. A finite tank stops at its capacity.
+- The fill and drain slots move buckets. Use on a block does not place or scoop a fluid.
+- Chunk unload while fluids are in pipes or tanks. The buffer stays on the block.
 - Config card copying of fluid-related side configs.
-- Multiple fluid types in the same network (if supported).
+- Two pipes holding different fluids do not connect. Both amounts stay.
 
 ## Performance Considerations
 
