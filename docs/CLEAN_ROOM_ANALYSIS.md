@@ -1,6 +1,6 @@
 # Clean-Room Analysis: Systems and Patterns We Can Learn From Mekanism
 
-This is a conceptual, high-level analysis based solely on public documentation, wiki descriptions, observed gameplay behavior, and high-level architectural review of the public source repository structure. **No code, textures, models, or proprietary assets are referenced or reproduced.** The goal is to identify proven design patterns so Mekanika can reimplement equivalent systems originally and efficiently.
+This is a conceptual, high-level analysis based solely on public documentation, wiki descriptions, and observed gameplay behavior. No code, textures, models, or proprietary assets are referenced or reproduced. The goal is to identify proven design patterns so Mekanika can reimplement equivalent systems originally and efficiently.
 
 ## 1. Overall Architecture and Modularity
 
