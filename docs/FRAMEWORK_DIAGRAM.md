@@ -1,6 +1,6 @@
-# Mekanika Framework Diagram
+# Mekanika Framework Architecture Diagram
 
-Visual overview of the module architecture and dependencies.
+This diagram shows the high-level module structure and dependencies for Mekanika.
 
 ```mermaid
 graph TB
@@ -94,8 +94,8 @@ graph TB
 ## Key Rules
 
 - Common code lives in the shared module.
-- Platform modules (Forge / Fabric / NeoForge) are thin adapters.
+- Platform modules (Forge/Fabric/NeoForge) are thin adapters.
 - Generators, Storage, and Tools depend only on Core + PowerAPI (no circular dependencies).
-- PowerAPI is fully custom on Fabric; bridges or shared implementation on Forge / NeoForge.
+- PowerAPI is fully custom on Fabric; bridges or shared implementation on Forge/NeoForge.
 
-See also: [PLAN.md](PLAN.md), [FRAMEWORK_IMPLEMENTATION_ORDER.md](FRAMEWORK_IMPLEMENTATION_ORDER.md), [ENERGY_POWERAPI.md](ENERGY_POWERAPI.md).
+See also: [PLAN.md](PLAN.md), [FRAMEWORK_IMPLEMENTATION_ORDER.md](FRAMEWORK_IMPLEMENTATION_ORDER.md), and the [documentation index](README.md).
