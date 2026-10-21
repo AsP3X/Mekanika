@@ -1,90 +1,73 @@
-# Clean-Room Analysis: Multiblock Formation Protocol
+# Multiblock Formation Protocol — Clean-Room Analysis
 
-This document analyzes the high-level design of Mekanism’s multiblock formation system based on public package structure, class names, commit messages, and observed gameplay behavior. No code is reproduced.
+High-level analysis of Mekanism’s multiblock formation system based on public source structure, class names, commit history, and observed behavior. No code or assets are reproduced.
 
 ## Core Components
 
-The multiblock library (`lib/multiblock`) contains the following key pieces:
+| Component | Role |
+|-----------|------|
+| **FormationProtocol** | Coordinates the assembly process. Tracks locations, inner nodes, valves, and unique IDs during formation. Interacts with validators and produces a FormationResult. |
+| **MultiblockManager** | Per-structure-type manager. Creates validators, owns caches, and handles lifecycle (formation, updates, destruction). |
+| **CuboidStructureValidator** | Default validator for rectangular prism structures. Enforces min/max dimensions, validates frame (edges/faces) vs. inner volume. |
+| **IStructureValidator** | Contract for all validators. Supports precheck, frame validation, inner validation, and postcheck phases. |
+| **Structure** | Holds the formed state: set of positions, bounds, inner nodes, and associated data. |
+| **MultiblockData** | Runtime data for a formed multiblock (inventories, energy, chemicals, formed flag, bounds). |
+| **MultiblockCache** | Persistent cache of structure data for performance and re-formation. |
+| **IMultiblock / IStructuralMultiblock** | Interfaces distinguishing controllers from structural blocks. |
 
-- **FormationProtocol** — Orchestrates the formation process for a given structure type.
-- **MultiblockManager** — One manager per multiblock type. Tracks formed structures and coordinates updates.
-- **IStructureValidator** / **CuboidStructureValidator** — Validates that a candidate structure matches the expected shape (typically a rectangular prism) and block requirements.
-- **MultiblockData** — Holds the live state of a formed structure (locations, internal components, bounds, capabilities).
-- **MultiblockCache** — Persists relevant state across formation/disassembly cycles.
-- **Structure** — Represents a candidate or formed structure, including its nodes and controller.
-- **Interfaces**:
-  - `IMultiblock` / `IMultiblockBase` — Core multiblock tile contract.
-  - `IStructuralMultiblock` — Structural (frame) blocks.
-  - `IInternalMultiblock` — Internal functional components.
-  - `IValveHandler` — Valve/port handling.
+## High-Level Formation Flow
 
-## Formation Flow (High-Level)
+1. **Trigger**  
+   A block placement, break, or tick on a potential controller or structural block initiates an update.
 
-From commit history and class responsibilities, formation appears to follow these phases:
+2. **Protocol Start**  
+   FormationProtocol is created or reused for the structure. It begins collecting candidate positions.
 
-1. **Trigger**
-   - Formation is typically initiated when a structural block is placed, broken, or when a previously invalid structure is re-validated.
-   - Updates are request-based rather than running on every tick to reduce load during rapid placement.
+3. **Validation Phases** (via validator)
+   - **Precheck**: Quick size and basic shape verification (e.g., minimum cuboid).
+   - **Frame Validation**: Edges and faces must be valid casing/structural blocks. Controllers and ports are allowed in specific positions.
+   - **Inner Validation**: Interior positions must be valid internal components (air, cells, providers, fuel assemblies, etc.) or empty as required.
+   - **Postcheck**: Structure-specific logic (e.g., exactly one controller, required minimum components, odd dimensions for turbines, no conflicting controllers).
 
-2. **Exploration / Shape Detection**
-   - Starting from a seed position, the system explores adjacent structural blocks.
-   - It collects a set of locations that form a candidate structure.
-   - Early optimizations use block checks instead of full tile lookups where possible and fail fast if a frame is known to be invalid this tick.
+4. **Result**  
+   Validator returns a FormationResult (success or failure with reason and optional position).
 
-3. **Validation**
-   - A structure-specific validator (commonly a cuboid validator) checks:
-     - Dimensions fall within min/max bounds.
-     - Edges and faces meet casing requirements.
-     - Required internal components are present (e.g., at least one cell and one provider for Induction Matrix).
-     - No invalid blocks occupy required positions.
-   - Validation can return early failure results without fully assembling data.
+5. **Activation**  
+   On success:
+   - Structure is marked formed.
+   - MultiblockData is populated.
+   - Bounding blocks / proxies are set up so interactions route to the controller.
+   - Particles and GUI become available.
+   - Cache is updated.
 
-4. **Structure Building**
-   - If validation succeeds, a `MultiblockData` instance is populated with:
-     - Full set of locations.
-     - Internal component positions and types.
-     - Bounds and relative positioning helpers.
-     - Aggregated statistics (capacity, transfer rate, etc.) derived from internal components.
+6. **Ongoing Management**  
+   - Managers track formed structures.
+   - Changes to internal blocks or frame can trigger revalidation.
+   - Invalid structures are reset and caches cleaned.
 
-5. **Formation / Activation**
-   - Nodes are linked to the formed structure.
-   - Internal components receive an `onCreated` (or equivalent) callback.
-   - Visual feedback is emitted (e.g., redstone particles).
-   - The structure becomes interactive (GUI appears on right-click).
+## Specialized Validators
 
-6. **Update & Invalidation**
-   - Formed structures listen for block changes inside their bounds.
-   - If a structural block is broken or an invalid change occurs, the structure is invalidated and may attempt reformation.
-   - Caching is used so that reformation does not require full re-exploration when only internal state changes.
+Most multiblocks use CuboidStructureValidator or a thin subclass. Complex ones (Fission, Turbine, Fusion) override postcheck to enforce additional rules:
+- Specific internal component counts or positions.
+- Odd dimensions for rotational symmetry.
+- Unique controller placement.
+- Compatibility of internal blocks with the structure type.
 
-## Key Design Patterns
+## Performance Considerations
 
-- **Request-based updates**: Formation is not attempted every tick. Changes mark structures for update, and validation is rate-limited.
-- **Fail-fast validation**: Invalid frames or known-bad structures abort early in the same tick.
-- **Separation of concerns**:
-  - Shape validation (validator)
-  - Data aggregation (MultiblockData)
-  - Lifecycle management (Manager)
-  - Persistence (Cache)
-- **Internal vs. structural distinction**: Frame blocks define the bounds; internal components define capacity and behavior.
-- **Controller pattern**: One tile typically acts as the controller that owns the MultiblockData and exposes the GUI.
+- Formation attempts are rate-limited.
+- Chunk lookups are cached during validation.
+- Structure merging logic avoids redundant full scans when adjacent structures combine.
+- Reduced update tags minimize network traffic for large structures.
 
-## Observed Gameplay Behavior
+## Key Design Lessons for Mekanika
 
-- Correct structures form with a particle effect and become interactive.
-- Rapid placement of the final blocks can sometimes delay formation until a block is broken and replaced (historical issue related to update timing).
-- Large structures (up to 18×18×18) form efficiently after optimizations that reduced formation time from ~100–150 ms to a few milliseconds.
-- Internal component tiers can be mixed; the structure aggregates their contributions.
+- Separate formation protocol from structure-specific validation.
+- Use phased validation (precheck → frame → inner → postcheck) for clear failure reporting.
+- Keep a reusable cuboid validator as the base; specialize only where needed.
+- Controllers should be distinct from pure structural blocks, with bounding blocks proxying interactions.
+- Provide clear FormationResult feedback (success/failure + reason + position) for player UX and debugging.
+- Cache formed structures and use rate limiting to protect server performance.
+- Support structure merging and revalidation without full rebuilds when possible.
 
-## Learnings for Mekanika
-
-1. Build a reusable formation protocol that is request-driven rather than tick-driven.
-2. Separate shape validation from data aggregation and lifecycle management.
-3. Support fail-fast checks and rate limiting to handle rapid building.
-4. Distinguish structural (frame) blocks from internal functional components.
-5. Provide clear visual and GUI feedback on successful formation.
-6. Cache formed structure data so minor internal changes do not require full revalidation.
-7. Allow internal components to contribute statistics (capacity, rate, etc.) that are aggregated at formation time.
-8. Design for mixed-tier internals where appropriate.
-
-This analysis remains strictly clean-room. All Mekanika implementations should be original.
+This pattern allows a single framework to support Dynamic Tanks, Induction Matrices, Turbines, Reactors, and future structures with minimal duplication.
